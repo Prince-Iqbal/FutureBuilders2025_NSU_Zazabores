@@ -1,5 +1,7 @@
 # স্বাস্থ্য সহায়ক (Health Assistant)
 
+Live on Google Cloud: https://health-assistant-903298187865.asia-south1.run.app/ 
+
 ## 🏥 Offline-First Healthcare PWA for Rural Bangladesh
 
 A mobile-first Progressive Web Application designed to help people in Bangladesh's rural and hill tract regions access basic medical guidance despite limited or intermittent internet connectivity.
@@ -10,7 +12,8 @@ A mobile-first Progressive Web Application designed to help people in Bangladesh
 
 
 Basic features https://youtu.be/PQ4NzHv6C9M?si=V3F86K3KSwKlLGPK
-\Voice agent feature 
+
+Voice agent feature 
 
 https://youtube.com/shorts/iQJLw5-Szu0?si=0oAc6ZljrETOyy6j
 
