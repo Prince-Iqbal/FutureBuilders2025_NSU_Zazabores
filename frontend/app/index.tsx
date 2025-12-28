@@ -181,7 +181,8 @@ export default function HomeScreen() {
                 border: 'none',
                 backgroundColor: '#ffffff',
               }}
-              allow="microphone; geolocation"
+              allow="microphone; geolocation; camera; autoplay"
+              sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals allow-downloads"
               title="Sustho Voice Assistant"
             />
           ) : (
