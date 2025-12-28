@@ -8,6 +8,13 @@ A mobile-first Progressive Web Application designed to help people in Bangladesh
 
 ---
 
+
+Basic features https://youtu.be/PQ4NzHv6C9M?si=V3F86K3KSwKlLGPK
+\Voice agent feature 
+
+https://youtube.com/shorts/iQJLw5-Szu0?si=0oAc6ZljrETOyy6j
+
+
 ## 👥 Team Information
 
 - **Team Name:** NSU_Zazabores
