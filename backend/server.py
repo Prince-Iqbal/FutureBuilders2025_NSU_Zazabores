@@ -552,18 +552,35 @@ async def offline_triage(request: TriageRequest):
         "created_at": datetime.utcnow().isoformat()
     }
 
-# Include router
-app.include_router(api_router)
-
-# Mount static files for frontend (if directory exists)
+# Mount static files for frontend BEFORE API router
 static_dir = Path(__file__).parent / "static"
 if static_dir.exists():
-    app.mount("/", StaticFiles(directory=str(static_dir), html=True), name="static")
+    logger.info(f"Mounting static files from: {static_dir}")
+    app.mount("/assets", StaticFiles(directory=str(static_dir / "assets")), name="assets")
+    app.mount("/_expo", StaticFiles(directory=str(static_dir / "_expo")), name="expo")
 
     @app.get("/")
     async def serve_frontend():
         """Serve the frontend index.html"""
         return FileResponse(str(static_dir / "index.html"))
+
+    @app.get("/{path:path}")
+    async def serve_spa(path: str):
+        """Serve SPA routes"""
+        file_path = static_dir / f"{path}.html"
+        if file_path.exists():
+            return FileResponse(file_path)
+        # For other static files
+        file_path = static_dir / path
+        if file_path.exists():
+            return FileResponse(file_path)
+        # Fallback to index for SPA routing
+        return FileResponse(str(static_dir / "index.html"))
+else:
+    logger.warning(f"Static directory not found: {static_dir}")
+
+# Include API router
+app.include_router(api_router)
 
 # CORS middleware
 app.add_middleware(
