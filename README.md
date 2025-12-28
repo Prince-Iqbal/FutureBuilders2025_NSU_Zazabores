@@ -191,8 +191,30 @@ Every result includes:
    - Provides bilingual medical guidance (Bangla + English)
    - Classifies severity into: emergency/moderate/mild
    - Accessed directly through Google AI Studio API (no intermediaries)
+   - Code Location: `backend/server.py` lines 243-305
 
-2. **Rule-Based Fallback System**
+2. **Google Gemini 2.5 Flash Native Audio Preview** (Voice Assistant)
+   - Real-time Bangla voice conversation for symptom collection
+   - Natural language understanding for health triage
+   - Low-latency audio streaming via Gemini Live API
+   - Code Location: `sustho-agent/services/geminiService.ts`
+
+3. **Google Gemini 3 Flash Preview** (Voice Assistant)
+   - Conversation history analysis and triage summarization
+   - Structured JSON output for medical reports
+   - Code Location: `sustho-agent/services/geminiService.ts`
+
+4. **Google Gemini 2.5 Flash TTS** (Voice Assistant)
+   - Text-to-speech for guidance audio playback
+   - Natural Bangla pronunciation using 'Kore' voice
+   - Code Location: `sustho-agent/services/geminiService.ts`
+
+5. **Google Gemini 2.5 Flash with Google Maps Tool** (Voice Assistant)
+   - Geolocation-based hospital suggestions
+   - Real-time facility discovery using Maps grounding
+   - Code Location: `sustho-agent/services/geminiService.ts`
+
+6. **Rule-Based Fallback System**
    - Deterministic algorithm for offline operation
    - Weight-based severity classification using symptom severity scores
    - Age modifiers (children <5, elderly >60 get higher risk scores)
@@ -201,9 +223,10 @@ Every result includes:
 
 ### AI Development Assistants Used
 During the development of this project, we utilized the following AI coding assistants:
-- **Claude 3.5 Sonnet** - Architecture design, code review, documentation, migration planning
-- **GitHub Copilot** - Code completion and suggestions
-- **ChatGPT** - Research, problem-solving, and algorithm design
+- **Claude 3.5 Sonnet** - Architecture design, code review, documentation, migration planning, deployment configuration
+- **GitHub Copilot** - Code completion and suggestions for TypeScript/Python code
+- **ChatGPT** - Research, problem-solving, algorithm design, Bangla translation assistance
+- **Various AI Tools** - Voice assistant development, PDF generation logic, React component structure
 
 **All AI-generated code was thoroughly reviewed, tested, and validated by the team members.**
 
@@ -281,126 +304,38 @@ Slow Connection (>10s)→ Auto-fallback to local rules
 
 ## 🚀 Deployment & Running the Application
 
-### Cloud Deployment (Google Cloud Platform)
-
-**Prerequisites:**
-- Google Cloud account with billing enabled
-- gcloud CLI installed ([Download](https://cloud.google.com/sdk/docs/install))
-- Google AI Studio API key from [ai.google.dev](https://ai.google.dev)
-
-**Deployment Steps:**
-
-1. **Setup Cloud SQL Database:**
-```bash
-# Set your project ID
-gcloud config set project test-b9457
-
-# Create PostgreSQL instance (takes ~5 minutes)
-gcloud sql instances create health-assistant-db \
-  --database-version=POSTGRES_15 \
-  --tier=db-f1-micro \
-  --region=asia-south1 \
-  --root-password="CHANGE_THIS"
-
-# Create database and user
-gcloud sql databases create healthdb --instance=health-assistant-db
-gcloud sql users create healthuser --instance=health-assistant-db --password="CHANGE_THIS"
-```
-
-2. **Deploy Application:**
-
-**On Windows:**
-```cmd
-REM Update PROJECT_ID and DB_PASSWORD in deploy.bat first
-deploy.bat
-```
-
-**On Linux/Mac:**
-```bash
-# Update PROJECT_ID and DB_PASSWORD in deploy.sh first
-chmod +x deploy.sh
-./deploy.sh
-```
-
-3. **Access Your App:**
-```
-Your application will be deployed at:
-https://health-assistant-[hash].run.app
-```
-
----
-
-### Local Development
-
-**Prerequisites:**
+### Prerequisites
 - Node.js 18+
 - Python 3.11+
-- PostgreSQL 15+ (or use Docker)
+- PostgreSQL 15+
 
-**Backend Setup:**
+### Backend Setup
 ```bash
 cd backend
-
-# Install dependencies
 pip install -r requirements.txt
 
-# Create .env file (copy from .env.example)
-echo "DATABASE_URL=postgresql://healthuser:healthpass@localhost:5432/healthdb" > .env
-echo "GOOGLE_AI_API_KEY=your_google_ai_studio_key" >> .env
+# Set environment variables
+export DATABASE_URL=postgresql://user:pass@localhost:5432/healthdb
+export EMERGENT_LLM_KEY=your_key_here
 
-# Start PostgreSQL using Docker (optional)
-docker run -d --name health-postgres \
-  -e POSTGRES_USER=healthuser \
-  -e POSTGRES_PASSWORD=healthpass \
-  -e POSTGRES_DB=healthdb \
-  -p 5432:5432 \
-  postgres:15
-
-# Run backend server
 uvicorn server:app --reload --port 8001
 ```
 
-**Frontend Setup:**
+### Frontend Setup
 ```bash
 cd frontend
-
-# Install dependencies
-npm install  # or yarn install
-
-# Create .env file
-echo "EXPO_PUBLIC_BACKEND_URL=http://localhost:8001" > .env
-
-# Run development server
-npm run web  # or yarn web
+yarn install
+yarn start
 ```
-
-**Access locally:**
-- Backend API: http://localhost:8001
-- Frontend App: http://localhost:8081
-- API Docs: http://localhost:8001/docs
-
----
 
 ### Environment Variables
-
-**Backend (.env):**
-```bash
-# Local Development
-DATABASE_URL=postgresql://healthuser:healthpass@localhost:5432/healthdb
-GOOGLE_AI_API_KEY=your_google_ai_studio_key
-
-# Cloud Run Production (configured via gcloud)
-# DATABASE_URL=postgresql+psycopg2://healthuser:PASSWORD@/healthdb?host=/cloudsql/PROJECT:REGION:INSTANCE
-# GOOGLE_AI_API_KEY=your_key
 ```
+# Backend (.env)
+DATABASE_URL=postgresql://healthuser:healthpass@localhost:5432/healthdb
 
-**Frontend (.env):**
-```bash
-# Local development - point to local backend
-EXPO_PUBLIC_BACKEND_URL=http://localhost:8001
 
-# Production - leave empty (uses relative URLs on Cloud Run)
-# EXPO_PUBLIC_BACKEND_URL=
+# Frontend (.env)
+EXPO_PUBLIC_BACKEND_URL=https://your-domain.com
 ```
 
 ---

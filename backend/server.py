@@ -100,8 +100,8 @@ class SyncQueueDB(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     synced_at = Column(DateTime, nullable=True)
 
-# Create tables
-Base.metadata.create_all(bind=engine)
+# Create tables (commented out for Cloud Run - tables already exist)
+# Base.metadata.create_all(bind=engine)
 
 # ============== PYDANTIC MODELS ==============
 
@@ -552,7 +552,10 @@ async def offline_triage(request: TriageRequest):
         "created_at": datetime.utcnow().isoformat()
     }
 
-# Mount static files for frontend BEFORE API router
+# Include API router FIRST (before catch-all routes)
+app.include_router(api_router)
+
+# Mount static files for frontend AFTER API router
 static_dir = Path(__file__).parent / "static"
 if static_dir.exists():
     logger.info(f"Mounting static files from: {static_dir}")
@@ -566,7 +569,8 @@ if static_dir.exists():
 
     @app.get("/{path:path}")
     async def serve_spa(path: str):
-        """Serve SPA routes"""
+        """Serve SPA routes - catches everything not matched by API router"""
+        # For HTML files
         file_path = static_dir / f"{path}.html"
         if file_path.exists():
             return FileResponse(file_path)
@@ -578,9 +582,6 @@ if static_dir.exists():
         return FileResponse(str(static_dir / "index.html"))
 else:
     logger.warning(f"Static directory not found: {static_dir}")
-
-# Include API router
-app.include_router(api_router)
 
 # CORS middleware
 app.add_middleware(
