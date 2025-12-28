@@ -11,9 +11,20 @@ A mobile-first Progressive Web Application designed to help people in Bangladesh
 ## 👥 Team Information
 
 - **Team Name:** NSU_Zazabores
-- **Members:** Iqbal Bahar Prince, Bhuyian Arshan Rashid Dibbo, Md. Samin Yasir
-
-- **Hackathon:** Future Builders AI Hackathon
+- **Members:** 
+1. 
+name: Iqbal Bahar Prince
+email: iqbal.prince@northsouth.edu
+phone number: 01794689278
+2. 
+name: Bhuyian Arshan Rashid Dibbo
+email: bhuyian.dibbo.252@northsouth.edu
+phone number: 01406617458
+3. 
+name: Md. Samin Yasir
+email: saminyasir820@gmail.com
+phone number: 01972659706
+- **Hackathon:** Future Builders AI-Driven Cognitive Innovation Hackathon
 
 ---
 
@@ -111,3 +122,348 @@ Every result includes:
 └─────────────────────────────────────────┘
 ```
 
+### Data Storage
+| Data Type | Storage | Sync Strategy |
+|-----------|---------|---------------|
+| Symptoms Master | AsyncStorage | Pre-loaded |
+| User Profile | AsyncStorage + Server | Sync on change |
+| Consultations | AsyncStorage + Server | Queue for sync |
+
+---
+
+## 🛠 Technologies Used
+
+### Frontend
+| Technology | Purpose |
+|------------|---------|
+| React Native (Expo) | Cross-platform mobile app |
+| TypeScript | Type safety |
+| AsyncStorage | Local data persistence |
+| Expo Router | Navigation |
+| @expo/vector-icons | Icon system |
+| Zustand | State management |
+
+### Backend
+| Technology | Purpose |
+|------------|---------|
+| FastAPI | REST API framework |
+| PostgreSQL | Relational database |
+| SQLAlchemy | ORM |
+| Google Generative AI SDK | Direct Gemini integration |
+| Uvicorn | ASGI server |
+
+### Cloud Infrastructure
+| Technology | Purpose |
+|------------|---------|
+| Google Cloud Run | Serverless container hosting |
+| Cloud SQL (PostgreSQL 15) | Managed database |
+| Google AI Studio | Gemini 2.0 Flash API |
+| Cloud Build | CI/CD pipeline |
+
+### AI Integration
+| Technology | Purpose |
+|------------|---------|
+| Google Gemini 2.0 Flash | AI-powered symptom triage |
+| Rule-Based Fallback | Offline triage algorithm |
+
+---
+
+## 📱 API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/health` | GET | Health check |
+| `/api/symptoms` | GET | Get all symptoms |
+| `/api/users` | POST | Create user profile |
+| `/api/users/{id}` | GET/PUT | Get/Update user |
+| `/api/triage` | POST | AI-powered triage |
+| `/api/triage/offline` | POST | Rule-based triage |
+| `/api/consultations/{user_id}` | GET | Get history |
+| `/api/sync` | POST | Sync offline data |
+
+---
+
+## 🤖 AI Tools Disclosure (FutureBuilders 2025 Requirement)
+
+### AI Technologies in Application
+1. **Google Gemini 2.0 Flash** (via Google AI Studio API)
+   - Primary AI for symptom classification and medical triage
+   - Provides bilingual medical guidance (Bangla + English)
+   - Classifies severity into: emergency/moderate/mild
+   - Accessed directly through Google AI Studio API (no intermediaries)
+
+2. **Rule-Based Fallback System**
+   - Deterministic algorithm for offline operation
+   - Weight-based severity classification using symptom severity scores
+   - Age modifiers (children <5, elderly >60 get higher risk scores)
+   - Duration modifiers (symptoms >3 days increase severity)
+   - Ensures functionality in areas with zero internet connectivity
+
+### AI Development Assistants Used
+During the development of this project, we utilized the following AI coding assistants:
+- **Claude 3.5 Sonnet** - Architecture design, code review, documentation, migration planning
+- **GitHub Copilot** - Code completion and suggestions
+- **ChatGPT** - Research, problem-solving, and algorithm design
+
+**All AI-generated code was thoroughly reviewed, tested, and validated by the team members.**
+
+### Ethical & Safety Considerations
+- ⚠️ **Not a diagnostic tool** - Clearly stated in all outputs and disclaimers
+- ⚠️ **No prescriptions** - Only provides general guidance, never prescribes medications
+- ⚠️ **Emergency emphasis** - Always recommends hospital for serious symptoms
+- ⚠️ **Disclaimers** - Present in both Bangla (এটি চিকিৎসা পরামর্শ নয়) and English ("This is not medical advice")
+- ⚠️ **Human oversight recommended** - Not a replacement for medical professionals
+- ⚠️ **Privacy-focused** - No patient data shared with third parties
+
+---
+
+## ⚠️ Safety & Compliance
+
+### Medical Safety
+1. App never diagnoses conditions
+2. Emergency symptoms ALWAYS trigger red alert
+3. Disclaimers shown on every result
+4. When uncertain, defaults to higher severity
+
+### Disclaimers
+**Bangla:** এটি চিকিৎসা পরামর্শ নয়। ডাক্তারের সাথে যোগাযোগ করুন।
+
+**English:** This is not medical advice. Please consult a doctor.
+
+---
+
+## 🌐 Offline-First Architecture (Limited Internet Access)
+
+This application is specifically designed for Bangladesh's rural areas and hill tracts with unreliable or no internet connectivity.
+
+### How Offline Mode Works
+
+**1. Local-First Storage**
+- All symptoms cached in device storage (AsyncStorage)
+- User profiles stored locally before syncing to server
+- Consultation history accessible offline
+- No internet required for basic functionality
+
+**2. Smart AI Fallback**
+```
+Internet Available    → Google Gemini AI Triage (cloud-based, intelligent)
+Internet Unavailable  → Rule-Based Triage (local, deterministic)
+Slow Connection (>10s)→ Auto-fallback to local rules
+```
+
+**3. Sync Queue Mechanism**
+- Offline consultations queued locally in device storage
+- Auto-sync when internet connection restored
+- Background sync without user intervention
+- Conflict resolution: server data takes precedence
+
+**4. Progressive Web App (PWA)**
+- Installable on mobile home screen (no app store needed)
+- Works like a native app
+- Service worker caches static assets
+- Runs on any device with a web browser
+
+### Network Strategy
+| Scenario | Behavior |
+|----------|----------|
+| **Online** | Cloud Run API + Gemini AI → Intelligent triage |
+| **Offline** | Local rule-based algorithm → Basic triage |
+| **Network restored** | Auto-sync queued data in background |
+| **Weak signal** | Timeout after 10s, fallback to local |
+
+### Why This Matters
+- **Hill tracts**: Often no mobile signal for days
+- **Rural villages**: Intermittent electricity = intermittent internet
+- **Healthcare workers**: Can use app in the field without connectivity
+- **Reliability**: App works 100% of the time, regardless of network
+
+---
+
+## 🚀 Deployment & Running the Application
+
+### Cloud Deployment (Google Cloud Platform)
+
+**Prerequisites:**
+- Google Cloud account with billing enabled
+- gcloud CLI installed ([Download](https://cloud.google.com/sdk/docs/install))
+- Google AI Studio API key from [ai.google.dev](https://ai.google.dev)
+
+**Deployment Steps:**
+
+1. **Setup Cloud SQL Database:**
+```bash
+# Set your project ID
+gcloud config set project test-b9457
+
+# Create PostgreSQL instance (takes ~5 minutes)
+gcloud sql instances create health-assistant-db \
+  --database-version=POSTGRES_15 \
+  --tier=db-f1-micro \
+  --region=asia-south1 \
+  --root-password="CHANGE_THIS"
+
+# Create database and user
+gcloud sql databases create healthdb --instance=health-assistant-db
+gcloud sql users create healthuser --instance=health-assistant-db --password="CHANGE_THIS"
+```
+
+2. **Deploy Application:**
+
+**On Windows:**
+```cmd
+REM Update PROJECT_ID and DB_PASSWORD in deploy.bat first
+deploy.bat
+```
+
+**On Linux/Mac:**
+```bash
+# Update PROJECT_ID and DB_PASSWORD in deploy.sh first
+chmod +x deploy.sh
+./deploy.sh
+```
+
+3. **Access Your App:**
+```
+Your application will be deployed at:
+https://health-assistant-[hash].run.app
+```
+
+---
+
+### Local Development
+
+**Prerequisites:**
+- Node.js 18+
+- Python 3.11+
+- PostgreSQL 15+ (or use Docker)
+
+**Backend Setup:**
+```bash
+cd backend
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Create .env file (copy from .env.example)
+echo "DATABASE_URL=postgresql://healthuser:healthpass@localhost:5432/healthdb" > .env
+echo "GOOGLE_AI_API_KEY=your_google_ai_studio_key" >> .env
+
+# Start PostgreSQL using Docker (optional)
+docker run -d --name health-postgres \
+  -e POSTGRES_USER=healthuser \
+  -e POSTGRES_PASSWORD=healthpass \
+  -e POSTGRES_DB=healthdb \
+  -p 5432:5432 \
+  postgres:15
+
+# Run backend server
+uvicorn server:app --reload --port 8001
+```
+
+**Frontend Setup:**
+```bash
+cd frontend
+
+# Install dependencies
+npm install  # or yarn install
+
+# Create .env file
+echo "EXPO_PUBLIC_BACKEND_URL=http://localhost:8001" > .env
+
+# Run development server
+npm run web  # or yarn web
+```
+
+**Access locally:**
+- Backend API: http://localhost:8001
+- Frontend App: http://localhost:8081
+- API Docs: http://localhost:8001/docs
+
+---
+
+### Environment Variables
+
+**Backend (.env):**
+```bash
+# Local Development
+DATABASE_URL=postgresql://healthuser:healthpass@localhost:5432/healthdb
+GOOGLE_AI_API_KEY=your_google_ai_studio_key
+
+# Cloud Run Production (configured via gcloud)
+# DATABASE_URL=postgresql+psycopg2://healthuser:PASSWORD@/healthdb?host=/cloudsql/PROJECT:REGION:INSTANCE
+# GOOGLE_AI_API_KEY=your_key
+```
+
+**Frontend (.env):**
+```bash
+# Local development - point to local backend
+EXPO_PUBLIC_BACKEND_URL=http://localhost:8001
+
+# Production - leave empty (uses relative URLs on Cloud Run)
+# EXPO_PUBLIC_BACKEND_URL=
+```
+
+---
+
+## 📊 Limitations & Future Work
+
+### Current Limitations
+1. Not a replacement for doctors - triage only
+2. Limited symptom library - 22 common symptoms
+3. No image/voice analysis
+4. Single language pair - Bangla + English only
+
+### Future Improvements
+1. **Expand symptom database** - Include more conditions
+2. **Add voice input** - For illiterate users
+3. **Community health worker mode** - Multi-patient tracking
+4. **Integration with telemedicine** - Connect to real doctors
+5. **SMS fallback** - For feature phones
+6. **Regional dialects** - Support Sylheti, Chittagonian
+
+---
+
+## 📁 Project Structure
+
+```
+/app
+├── backend/
+│   ├── server.py          # FastAPI application
+│   ├── requirements.txt   # Python dependencies
+│   └── .env               # Environment variables
+├── frontend/
+│   ├── app/               # Expo Router screens
+│   │   ├── _layout.tsx    # Tab navigation
+│   │   ├── index.tsx      # Home screen
+│   │   ├── symptoms.tsx   # Symptom selection
+│   │   ├── result.tsx     # Triage result
+│   │   ├── history.tsx    # Consultation history
+│   │   └── profile.tsx    # User profile
+│   ├── src/
+│   │   ├── store/         # Zustand state management
+│   │   ├── services/      # API & offline triage
+│   │   └── constants/     # Translations
+│   └── package.json
+├── ARCHITECTURE.md        # System design document
+└── README.md              # This file
+```
+
+---
+
+## 📞 Emergency Contacts (Bangladesh)
+
+- **National Emergency:** 999
+- **Ambulance:** 199
+- **Health Helpline:** 16263
+
+---
+
+## 📄 License
+
+MIT License - Free to use and modify for healthcare initiatives.
+
+---
+
+*Built with ❤️ for Bangladesh's rural communities*
+
+**স্বাস্থ্য সেবা সবার জন্য | Healthcare for Everyone**
